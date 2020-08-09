@@ -1,12 +1,14 @@
-FROM python:3.7
+FROM python:3.7-alpine
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN mkdir /code
-WORKDIR /code/
-COPY Pipfile Pipfile.lock /code/
+COPY ./requirements.txt /requirements.txt
+RUN pip install -r /requirements.txt
 
-RUN pip install pipenv && pipenv install --system
+RUN mkdir /app
+WORKDIR /app
+COPY ./app /app
 
-COPY . /code/
+RUN adduser -D user
+USER user
